@@ -1,4 +1,4 @@
-with open('2022\day_1_1_input.txt', 'r') as inputs:
+with open('2022\day0input.txt', 'r') as inputs:
     lines = inputs.readlines()
     elves = []
     elf_total = 0
