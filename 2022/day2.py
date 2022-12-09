@@ -1,31 +1,60 @@
-import re
-f = open('2022/day2input.txt', 'r').readlines()
-lines = []
-for line in f:
-    line = line.replace('\n', '')
-    lines.append(line)
-def pt1():
-    sum = 0
+#   A X Rock    diff 23
+#   B Y Paper
+#   C Z Scissors
+#   A Z
+#   B X
+#   C Y
+with open('2022\day2input.txt', 'r') as inputs:
+    lines = inputs.readlines()
+    score = 0
+    strat_score = 0
+    selection = {
+        'X': 1,
+        'Y': 2,
+        'Z': 3
+    }
+    beats = {
+        'A': 'Z',
+        'B': 'X',
+        'C': 'Y'
+    }
+    value = {
+        'X' : 0,
+        'Y' : 3,
+        'Z' : 6
+    }
+    
     for line in lines:
-        one, two = line[:len(line) // 2], line[len(line) // 2:]
-        unique = set(one).intersection(set(two)).pop()
-        if 'a'<=unique<='z':
-            sum += ord(unique) - 96
-        else:
-            sum += ord(unique) - 38
-    print(sum)
-
-def pt2():
-    sum = 0
-    sets = [lines[i:i+3] for i in range(0, len(f), 3)]
-    for i in sets:
-        unique = set(i[0]).intersection(i[1]).intersection(i[2]).pop()
-    if 'a'<=unique<='z':
-        sum += ord(unique) - 96
-    else:
-        sum += ord(unique) - 38
-    print(sum)
+        choices = tuple(line.strip('\n').split(' '))
+        score += selection[choices[1]]
+        if ord(choices[1]) - ord(choices[0]) == 23:
+            score += 3
+        elif beats[choices[0]] != choices[1]:
+            score += 6
+    print(score)
     
+    for line in lines:
+        choices = tuple(line.strip('\n').split(' '))
+        strat_score += value[choices[1]]
+        match value[choices[1]]:
+            case 6:
+                match choices[0]:
+                    case 'A':
+                        strat_score += selection['Y']
+                    case 'B':
+                        strat_score += selection['Z']
+                    case 'C':
+                        strat_score += selection['X']
+
+            case 3:
+                strat_score += selection[chr(ord(choices[0]) + 23)]
+            case 0:
+                strat_score += selection[beats[choices[0]]]
+    print(strat_score)
 
 
-    
+
+
+        
+        
+        
