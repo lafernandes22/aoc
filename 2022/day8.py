@@ -35,7 +35,7 @@ def pt1():
                         break
     print(visible)
 
-    def pt2():
+def pt2():
     best_score = 0
     best_pos = (0,0)
     for x in range(length):
