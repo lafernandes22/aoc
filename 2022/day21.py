@@ -39,6 +39,7 @@ def pt1(lines):
     print('root:', lines[root_index][1])
 
 monkeys = ('lttc', 'pfjc')
+# TODO actually do a search for the number
 def pt2():
     root_index = 0
     humn_index = 0
