@@ -11,7 +11,8 @@ head_pos = start_pos
 tail_pos = start_pos
 
 for line in lines:
-    match(line[0]): # Setting Head pos
+    # TODO loop each motion and every step move tail as needed, track seen positions at each step
+    match(line[0]): 
         case 'R':
             head_pos = (head_pos[0], head_pos[1] + line[1])
         case 'L':
@@ -20,8 +21,7 @@ for line in lines:
             head_pos = (head_pos[0] + line[1], head_pos[1])
         case 'D':
             head_pos = (head_pos[0] - line[1], head_pos[1])
-    # TODO calculate shortest omni path from Tail to Head
-    # A Star scoring movement options
     
+
 
 
