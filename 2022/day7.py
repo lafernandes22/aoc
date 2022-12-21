@@ -1,3 +1,5 @@
+from collections import Counter
+
 f = open('2022/day7input.txt', 'r').readlines()
 lines = []
 for line in f:
@@ -5,48 +7,51 @@ for line in f:
     lines.append(line)
 
 dirs = {}
-total_lookup = {}
-curr_dir = ''
-prev_dir = []
-
+current_route = []
 for line in lines:
     line = line.split(' ')
     match(line[0]):
         case '$':
             match(line[1]):
                 case 'cd':
-                    print(' '.join(line))
                     match(line[2]):
-                        case '..': # WORKING - THERE ARE DUPE DIRS at different levels
-                            curr_dir = prev_dir[len(prev_dir)-1]
-                            prev_dir.pop()
-                            print(curr_dir)
-                        case default: # WORKING
-                            if curr_dir:
-                                prev_dir.append(curr_dir)
-                            curr_dir = line[2]
-                            print(curr_dir)
-                            if curr_dir not in dirs:
-                                dirs[curr_dir] = []
-                case 'ls':
-                    continue
+                        case '..':
+                            current_route.pop()
+                        case default:
+                            current_route.append(line[2] if line[2] == '/' else line[2] + '/') 
+                            current_route_str = ''.join(current_route)
+                            if current_route_str not in dirs:
+                                dirs[current_route_str] = 0
         case 'dir':
-            dirs[curr_dir].append(line[1])
+            continue
         case default:
-            value = int(line[0])
-            if curr_dir not in total_lookup:
-                total_lookup[curr_dir] = value
-            else:
-                total_lookup[curr_dir] += value
+            dirs[current_route_str] += int(line[0])
+keys = [x for x in dirs]
+keys.sort(reverse=True)
+for key in keys: # iterate from longest key, lowest levels
+    c = Counter(key)['/']
+    for dir in dirs: # check against every dir
+        d = Counter(dir)['/']
+        if dir[0:len(key)] == key and d == c + 1: # if dir contains key name, goes bottom to top
+            dirs[key] += dirs[dir]
 
-# TODO go from each level dir
-
-for d in dirs:
-    print(d, dirs[d])
 sum = 0
-for l in total_lookup:
-    if total_lookup[l] <= 100000:
-        print(l, total_lookup[l])
-        sum += total_lookup[l]
+for key in dirs:
+    if dirs[key] <= 100000:
+        sum += dirs[key]
+print('pt1:', sum)
 
-print(sum)
+max_space = 70000000
+unused = max_space - dirs['/']
+goal = 30000000 - unused
+for w in sorted(dirs, key=dirs.get):
+    if dirs[w] > goal:
+        print('pt2:', dirs[w], w)
+        break
+
+
+
+        
+
+
+
